@@ -1,0 +1,28 @@
+name: Test Action
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to audit'
+        default: 'https://lintpage.com'
+
+jobs:
+  test-with-url:
+    name: Test with explicit URL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          urls: ${{ inputs.url }}
+
+  test-fail-on-warning:
+    name: Test fail-on-warning flag
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          urls: ${{ inputs.url }}
+          fail-on-warning: 'true'
