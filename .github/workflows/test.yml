@@ -26,3 +26,13 @@ jobs:
         with:
           urls: ${{ inputs.url }}
           fail-on-warning: 'true'
+
+  test-quiet:
+    name: Test quiet flag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./
+        with:
+          urls: ${{ inputs.url }}
+          quiet: 'true'
