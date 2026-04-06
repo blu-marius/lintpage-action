@@ -1,6 +1,6 @@
 # LintPage Action
 
-Catch SEO issues on preview deployments before they reach production.
+Audit SEO, accessibility, and performance on preview deployments before they reach production.
 
 This GitHub Action runs [LintPage](https://lintpage.com) audits on your pages and surfaces issues as GitHub annotations directly in your pull requests.
 
@@ -11,14 +11,14 @@ This GitHub Action runs [LintPage](https://lintpage.com) audits on your pages an
 | `urls` | Space-separated URLs to audit | No | Auto-detected from deployment event |
 | `config` | Path to LintPage config file | No | `.lintpagerc.json` (auto-detected) |
 | `fail-on-warning` | Fail the check on warnings (not just errors) | No | `false` |
-| `api-key` | LintPage API key for dashboard reporting | No | |
+| `quiet` | Minimal output (counts only) | No | `false` |
 
 ## Usage
 
 ### With Vercel preview deployments
 
 ```yaml
-name: SEO Check
+name: LintPage
 on: deployment_status
 
 jobs:
@@ -28,14 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: lintpage/action@v1
-        with:
-          api-key: ${{ secrets.LINTPAGE_API_KEY }} # optional
 ```
 
 ### With explicit URLs
 
 ```yaml
-name: SEO Check
+name: LintPage
 on: pull_request
 
 jobs:
@@ -51,7 +49,7 @@ jobs:
 ### With local build
 
 ```yaml
-name: SEO Check
+name: LintPage
 on: pull_request
 
 jobs:
@@ -83,7 +81,7 @@ jobs:
 1. Installs the `lintpage` CLI
 2. Detects target URLs from the action input or from `deployment_status` events (works automatically with Vercel, Netlify, etc.)
 3. Runs the audit with `--format github` so issues appear as annotations on your PR
-4. Exits with a non-zero code if critical issues (or warnings with `fail-on-warning`) are found
+4. Exits with a non-zero code if critical issues (or warnings with `--fail-on-warning`) are found
 
 ## License
 

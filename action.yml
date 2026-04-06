@@ -1,5 +1,5 @@
-name: 'LintPage SEO Check'
-description: 'Catch SEO issues on preview deployments before they reach production'
+name: 'LintPage'
+description: 'Audit SEO, accessibility, and performance on preview deployments before they reach production'
 branding:
   icon: 'search'
   color: 'blue'
@@ -15,9 +15,10 @@ inputs:
     description: 'Fail the check on warnings (not just errors)'
     required: false
     default: 'false'
-  api-key:
-    description: 'LintPage API key for dashboard reporting'
+  quiet:
+    description: 'Minimal output (counts only)'
     required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -40,8 +41,6 @@ runs:
 
     - name: Run LintPage
       shell: bash
-      env:
-        LINTPAGE_API_KEY: ${{ inputs.api-key }}
       run: |
         ARGS="--format github"
         if [ "${{ inputs.fail-on-warning }}" = "true" ]; then
@@ -50,8 +49,8 @@ runs:
         if [ -n "${{ inputs.config }}" ]; then
           ARGS="$ARGS --config ${{ inputs.config }}"
         fi
-        if [ -n "$LINTPAGE_API_KEY" ]; then
-          ARGS="$ARGS --report"
+        if [ "${{ inputs.quiet }}" = "true" ]; then
+          ARGS="$ARGS --quiet"
         fi
         if [ -n "${{ steps.urls.outputs.target }}" ]; then
           lintpage ${{ steps.urls.outputs.target }} $ARGS
